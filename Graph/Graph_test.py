@@ -5,6 +5,7 @@ import unittest
 from Graph import Graph
 from Graph import Edge
 from Graph import Vertex
+from sets import Set
 
 class GraphTest(unittest.TestCase):
 
@@ -14,15 +15,16 @@ class GraphTest(unittest.TestCase):
     return g1.__dict__ == g2.__dict__
 
   def test_add_vertex(self):
-    g1 = Graph()
-    g1.add_vertex(Vertex('label1'))
-    g1.add_vertex(Vertex('label2'))
-    g1.add_vertex(Vertex('label2'))
+    g = Graph()
+    g.add_vertex(Vertex('label1'))
+    g.add_vertex(Vertex('label2'))
+    g.add_vertex(Vertex('label2'))
 
-    g2 = Graph()
-    g2.add_vertex(Vertex('label1'))
-    g2.add_vertex(Vertex('label2'))
-    self.assertTrue(self.equal(g1, g2))
+    self.assertEqual(Vertex('l'), Vertex('l'))
+    self.assertEqual(g.vertex_labels, Set(['label1', 'label2']))
+    self.assertEqual(sorted(g.keys()), [Vertex('label1'), Vertex('label2')])
+    self.assertEqual(g[Vertex('label1')], {})
+    self.assertEqual(g[Vertex('label2')], {})
 
 if __name__ == "__main__":
   unittest.main()
