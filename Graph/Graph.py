@@ -15,6 +15,12 @@ http://greenteapress.com/complexity/thinkcomplexity.pdf
 """
 
 from sets import Set
+import hashlib
+
+"""A hash function
+"""
+def hash_string(s):
+  return int(hashlib.md5(s).hexdigest(), 16)
 
 """
 A class representing a vertex. It has a label.
@@ -34,6 +40,12 @@ class Vertex:
     return '%s' % repr(self.label)
 
   __str__ = __repr__
+
+  def __eq__(self, other):
+    return self.__str__() == other.__str__()
+
+  def __hash__(self):
+    return hash_string(self.__str__())
 
 
 """ A class representing an edge.
@@ -58,6 +70,12 @@ class Edge(tuple):
     return '(%s, %s)' % (repr(self[0]), repr(self[1]))
 
   __str__ = __repr__
+
+  def __eq__(self, other):
+    return self.__str__() == other.__str__()
+
+  def __hash__(self):
+    return hash_string(self.__str__())
 
 
 class Graph(dict):
@@ -161,5 +179,11 @@ class Graph(dict):
           return false
 
     return true
+
+  def __eq__(self, other):
+    return self.__str__() == other.__str__()
+
+  def __hash__(self):
+    return hash_string(self.__str__())
 
 
