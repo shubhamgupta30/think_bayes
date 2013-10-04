@@ -4,7 +4,10 @@ A simple representation of graph as dictioanry of sets.
 Every vertex has a label, which is used to access it in the graph.
 Graph is a dictionary with keys as vertex labels, and the values as the
 adjacency list of these vertices.
-An adjacency list is a set of labels corresponding to the neighbouring vertices
+An adjacency list is itself a dictionary with keys as vertex labels and values
+are the corresponding edge objects.
+Storing the edge objects is useful as they may store additional information
+about the edge, like weights, labels, etc.
 An edge is represented as a pair of vertex labels.
 
 Inspired largely by implementation in
@@ -73,7 +76,7 @@ class Graph(dict):
       self.add_edge(e)
 
   def add_vertex(self, v) :
-    """ Adds a vertex to the set of vertices.
+    """ Adds a vertex to the Graph's vertices.
 
     Args:
       v: The vertex to be added
@@ -83,7 +86,7 @@ class Graph(dict):
     # this vertex.
     if v.label not in self.vertex_labels:
       self.vertex_labels.add(v.label)
-      self[v] = Set()
+      self[v] = {}
 
   def add_edge(self, e):
     """ Adds an edge to the set of vertices.
@@ -94,11 +97,13 @@ class Graph(dict):
     (v,w) = e
     assert self.has_key(v)
     assert self.has_key(w)
-    self[v].add(w)
-    self[w].add(v)
+    self[v][w] = e
+    self[w][v] = e
 
   def remove_edge(self, e):
-    """ Removes an edge from the graph
+    """ Removes an edge from the graph if the edge is present.
+    Otherwise, it does nothing. Note that it does not throw an error
+    if the edge is not present.
 
     Args:
       e: The edge to be removed
@@ -106,22 +111,33 @@ class Graph(dict):
     (v,w) = e
     if self.has_key(v) and self.has_key(w):
       if w in self[v]:
-        self[v].remove(w)
+        del self[v][w]
       if v in self[w]:
-        self[w].remove(v)
+        del self[w][v]
 
   def remove_vertex(self, v):
-    """ Removes a vertex from the graph
+    """ Removes a vertex from the graph if it is present. Otherwise, it does
+    nothing. Note that it does not throw an error in case a vertex is not
+    present.
 
     Args:
       v: The vertex to be removed
     """
-    # Assumption of a 'sane' graph
+    # Is the vertex present in the graph?
     if self.has_key(v):
-      for vertex in self[v]:
-        self[vertex].remove(v)
+      # Remove all the neighbouring edges
+      edges = self[v].viewvalues()
+      for e in edges:
+        remove_edge(e)
+
+      # The adjacency list should be empty now.
+      assert self[v] == {}
       del self[v]
+
       # The label is freed only if the vertex present in the graph is deleted.
+      # As an unfortunate occurence, it may happen that the label is no longer
+      # used, but it is still present in the vertex_labels. This is not very
+      # harmful, while having the vice-versa situation can be harmful.
       self.vertex_labels.remove(v.label)
 
   def is_graph_sane(self):
@@ -139,6 +155,9 @@ class Graph(dict):
       for w in neighbours:
         if v not in self[w]:
           print "Undirectedness violated"
+          return false
+        if self[v][w] != self[w][v]:
+          print "Wrong Edge representation"
           return false
 
     return true
