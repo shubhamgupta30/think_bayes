@@ -22,15 +22,26 @@ class GraphTest(unittest.TestCase):
     g.add_vertex(Vertex('label2'))
 
     self.assertEqual(g, {Vertex('label1'):{}, Vertex('label2'):{}})
-    self.assertEqual(g.vertex_labels, Set(['label1', 'label2']))
 
-  def test_add_edge_without_adding_vertices(self):
+  def test_add_edge(self):
     g = Graph()
-    g.add_edge(Edge(Vertex('label1'), Vertex('label2')))
+    v = Vertex('label1')
+    w = Vertex('label2')
+    e = Edge(v,w)
 
+    # Without adding both vertices
+    g.add_edge(e)
     self.assertEqual(g, {})
-    self.assertEqual(g.vertex_labels, Set())
 
+    # Without adding one vertex
+    g.add_vertex(v)
+    g.add_edge(e)
+    self.assertEqual(g, {v:{}})
+
+    # After Adding both vertices
+    g.add_vertex(w)
+    g.add_edge(e)
+    self.assertEqual(g, {v:{w:e}, w:{v:e}})
 
 if __name__ == "__main__":
   unittest.main()

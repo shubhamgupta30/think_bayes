@@ -87,7 +87,6 @@ class Graph(dict):
       vs: list of vertices
       es: list of edges
     """
-    self.vertex_labels = Set()
     for v in vs:
       self.add_vertex(v)
 
@@ -103,11 +102,10 @@ class Graph(dict):
     # Property: Every vertex of a graph has a unique label.
     # If a vertex exists in the graph with this label, then do not insert
     #this vertex.
-    if v.label in self.vertex_labels:
+    if v in self:
       logging.warning('Vertex not inserted as there is another vertex in graph'
                       + ' with label ' + v.label)
       return
-    self.vertex_labels.add(v.label)
     self[v] = {}
 
   def add_edge(self, e):
@@ -162,12 +160,6 @@ class Graph(dict):
       assert self[v] == {}
       del self[v]
 
-      # The label is freed only if the vertex present in the graph is deleted.
-      # As an unfortunate occurence, it may happen that the label is no longer
-      # used, but it is still present in the vertex_labels. This is not very
-      # harmful, while having the vice-versa situation can be harmful.
-      self.vertex_labels.remove(v.label)
-
   def is_graph_sane(self):
     """ Performs basic sanity checks on the graph
 
@@ -175,9 +167,6 @@ class Graph(dict):
       true: if graph is sane
       false: if graph has some error
     """
-    if self.vertex_labels != Set([v.label for v in self.keys()]):
-      print "Label List Mismatch"
-      return false
 
     for (v, neighbours) in self.iteritems():
       for w in neighbours:
