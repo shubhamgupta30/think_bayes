@@ -85,7 +85,7 @@ class Graph(dict):
       self.vertex_labels.add(v.label)
       self[v] = Set()
 
-  def add_edge(self, e) :
+  def add_edge(self, e):
     """ Adds an edge to the set of vertices.
 
     Args:
@@ -96,3 +96,51 @@ class Graph(dict):
     assert self.has_key(w)
     self[v].add(w)
     self[w].add(v)
+
+  def remove_edge(self, e):
+    """ Removes an edge from the graph
+
+    Args:
+      e: The edge to be removed
+    """
+    (v,w) = e
+    if self.has_key(v) and self.has_key(w):
+      if w in self[v]:
+        self[v].remove(w)
+      if v in self[w]:
+        self[w].remove(v)
+
+  def remove_vertex(self, v):
+    """ Removes a vertex from the graph
+
+    Args:
+      v: The vertex to be removed
+    """
+    # Assumption of a 'sane' graph
+    if self.has_key(v):
+      for vertex in self[v]:
+        self[vertex].remove(v)
+      del self[v]
+      # The label is freed only if the vertex present in the graph is deleted.
+      self.vertex_labels.remove(v.label)
+
+  def is_graph_sane(self):
+    """ Performs basic sanity checks on the graph
+
+    Returns:
+      true: if graph is sane
+      false: if graph has some error
+    """
+    if self.vertex_labels != Set([v.label for v in self.keys()]):
+      print "Label List Mismatch"
+      return false
+
+    for (v, neighbours) in self.iteritems():
+      for w in neighbours:
+        if v not in self[w]:
+          print "Undirectedness violated"
+          return false
+
+    return true
+
+
