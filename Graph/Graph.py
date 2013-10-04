@@ -16,6 +16,7 @@ http://greenteapress.com/complexity/thinkcomplexity.pdf
 
 from sets import Set
 import hashlib
+import logging
 
 """A hash function
 """
@@ -101,10 +102,13 @@ class Graph(dict):
     """
     # Property: Every vertex of a graph has a unique label.
     # If a vertex exists in the graph with this label, then do not insert
-    # this vertex.
-    if v.label not in self.vertex_labels:
-      self.vertex_labels.add(v.label)
-      self[v] = {}
+    #this vertex.
+    if v.label in self.vertex_labels:
+      logging.warning('Vertex not inserted as there is another vertex in graph'
+                      + ' with label ' + v.label)
+      return
+    self.vertex_labels.add(v.label)
+    self[v] = {}
 
   def add_edge(self, e):
     """ Adds an edge to the set of vertices.
@@ -113,8 +117,14 @@ class Graph(dict):
       e: the edge to be added
     """
     (v,w) = e
-    assert self.has_key(v)
-    assert self.has_key(w)
+    if not self.has_key(v):
+      logging.warning('Attempt to insert edge ' + str(e) + ' while vertex ' +
+                      str(v) + ' is not in graph yet.')
+      return
+    if not self.has_key(w):
+      logging.warning('Attempt to insert edge ' + str(e) + ' while vertex ' +
+                      str(w) + ' is not in graph yet.')
+      return
     self[v][w] = e
     self[w][v] = e
 
