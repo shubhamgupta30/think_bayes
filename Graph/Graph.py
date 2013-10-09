@@ -217,6 +217,34 @@ class Graph(dict):
         edges.add(e)
     return list(edges)
 
+  def out_vertices(self, v):
+    """ Returns a list of vertices adjacent to v
+
+    Args:
+      v :  the vertex
+    Returns:
+      List of neighbors of the vertex v
+    """
+    if v not in self:
+      logging.warning('out_vertices fails, because ' + str(v) + ' is not in ' +
+                      'the graph')
+      return []
+    return self[v].keys()
+
+  def out_edges(self, v):
+    """ Returns a list of edges adjacent to v
+
+    Args:
+      v :  the vertex
+    Returns:
+      List of edges incident on the vertex v
+    """
+    if v not in self:
+      logging.warning('out_edges fails, because ' + str(v) + ' is not in ' +
+                      'the graph')
+      return []
+    return self[v].values()
+
 
   def is_graph_sane(self):
     """ Performs basic sanity checks on the graph

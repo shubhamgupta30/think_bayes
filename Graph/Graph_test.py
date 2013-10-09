@@ -186,6 +186,56 @@ class GraphTest(unittest.TestCase):
     g.add_edge(e3)
     self.verify_list_equal_unordered(g.edges(), [e1, e2, e3])
 
+  def test_out_vertices(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Test on a non existent vertex
+    g.add_vertex(v)
+    self.verify_list_equal_unordered(g.out_vertices(w), [])
+
+    # Test on a edgeless graph
+    g.add_vertex(w)
+    g.add_vertex(x)
+    self.verify_list_equal_unordered(g.out_vertices(v), [])
+
+    # Test on a non-edgeless graph
+    g.add_edge(e1)
+    self.verify_list_equal_unordered(g.out_vertices(x), [])
+    g.add_edge(e2)
+    g.add_edge(e3)
+    self.verify_list_equal_unordered(g.out_vertices(x), [v, w])
+
+  def test_out_edges(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Test on a non existent vertex
+    g.add_vertex(v)
+    self.verify_list_equal_unordered(g.out_edges(w), [])
+
+    # Test on a edgeless graph
+    g.add_vertex(w)
+    g.add_vertex(x)
+    self.verify_list_equal_unordered(g.out_edges(v), [])
+
+    # Test on a non-edgeless graph
+    g.add_edge(e1)
+    self.verify_list_equal_unordered(g.out_edges(x), [])
+    g.add_edge(e2)
+    g.add_edge(e3)
+    self.verify_list_equal_unordered(g.out_edges(x), [e2, e3])
+
 
 
 
