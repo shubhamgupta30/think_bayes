@@ -172,6 +172,32 @@ class Graph(dict):
     else:
       logging.warning("Attempt to remove a non-existent vertex " + str(v))
 
+  def get_edge(self, v1, v2):
+    """ Returns the edge between vertices v1 and v2 if it exists.
+
+    Args:
+      v1: The first vertex
+      v2: The second vertex
+    Returns:
+      The edge between v1 and v2, and None otherwise
+    """
+    if v1 not in self.viewkeys():
+      logging.warning('Vertex ' + str(v1) + ' is not present in graph.' +
+                      'Edge query unsuccessful.')
+      return None
+    if v2 not in self.viewkeys():
+      logging.warning('Vertex ' + str(v2) + ' is not present in graph.' +
+                      'Edge query unsuccessful.')
+      return None
+    edge_present = v1 in self[v2] and v2 in self[v1]
+    edge_not_present = v1 not in self[v2] and v2 not in self[v1]
+    assert edge_present or edge_not_present
+    if edge_present:
+      assert self[v2][v1] == self[v1][v2]
+      return self[v2][v1]
+    return None
+
+
   def is_graph_sane(self):
     """ Performs basic sanity checks on the graph
 

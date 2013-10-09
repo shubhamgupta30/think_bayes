@@ -108,6 +108,36 @@ class GraphTest(unittest.TestCase):
     g.remove_vertex(v)
     self.assertEqual(g, {w:{x:e2}, x:{w:e2}})
 
+  def test_get_edge(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Query for edge from an empty graph
+    self.assertEqual(g.get_edge(v, w), None)
+
+    # Query for a non existent edge with one vertex present
+    g.clear()
+    g.add_vertex(v)
+    self.assertEqual(g.get_edge(v, w), None)
+
+    # Query for a non existent edge with both vertices present
+    g.clear()
+    g.add_vertex(v)
+    g.add_vertex(w)
+    self.assertEqual(g.get_edge(v, w), None)
+
+    # Query for an existent edge
+    g.clear()
+    g.add_edge(e1)
+    g.add_edge(e2)
+    self.assertEqual(g.get_edge(v,w), e1)
+
+
 
 
 
