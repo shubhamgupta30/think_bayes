@@ -236,7 +236,32 @@ class GraphTest(unittest.TestCase):
     g.add_edge(e3)
     self.verify_list_equal_unordered(g.out_edges(x), [e2, e3])
 
+  def test_add_all_edges(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
 
+    # Test on a empty graph
+    g.add_all_edges()
+    self.assertEqual(g, {})
+
+    # Test on a non-edgeless graph
+    g.add_edge(e1)
+    g.add_vertex(x)
+    g.add_all_edges()
+    self.assertEqual(g, {v:{w:e1}, w:{v:e1}, x:{}})
+
+    # Test on a edgeless graph
+    g.clear()
+    g.add_vertex(v)
+    g.add_vertex(w)
+    g.add_vertex(x)
+    g.add_all_edges()
+    self.assertEqual(g, {v:{w:e1, x:e3}, w:{v:e1, x:e2}, x:{w:e2, v:e3}})
 
 
 

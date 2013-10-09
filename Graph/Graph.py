@@ -63,7 +63,9 @@ class Edge(tuple):
       v1: First Vertex
       v2: Second Vertex
     """
-    return tuple.__new__(self, (v1, v2))
+    if v1.label < v2.label:
+      return tuple.__new__(self, (v1, v2))
+    return tuple.__new__(self, (v2, v1))
 
   def __repr__(self):
     """ Crete a string representation of the edge
@@ -244,6 +246,19 @@ class Graph(dict):
                       'the graph')
       return []
     return self[v].values()
+
+  def add_all_edges(self):
+    """ Starts from an edgeless graph and adds all edges
+    """
+    if self.edges() != []:
+      logging.warning('Graph ' + str(self) + ' is not edgeless. Aborting add_all_edges.')
+      return
+    vertices = self.vertices()
+    for v in vertices:
+      for w in vertices:
+        if v == w:
+          continue
+        self[v][w] = self[w][v] if v in self[w] else Edge(v, w)
 
 
   def is_graph_sane(self):
