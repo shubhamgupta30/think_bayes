@@ -138,10 +138,17 @@ class Graph(dict):
     """
     (v,w) = e
     if self.has_key(v) and self.has_key(w):
-      if w in self[v]:
-        del self[v][w]
-      if v in self[w]:
+      edge_present = w in self[v] and v in self[w]
+      edge_not_present = w not in self[v] and v not in self[w]
+      assert edge_present or edge_not_present
+      if edge_present:
         del self[w][v]
+        del self[v][w]
+      else:
+        logging.warning('The edge ' + str(e) + ' is not present in the graph.')
+    else:
+      logging.warning('One of the vertices for the edge ' + str(e) + ' is ' +
+                      'not present in the graph. Edge deletion unsuccessful.')
 
   def remove_vertex(self, v):
     """ Removes a vertex from the graph if it is present. Otherwise, it does
