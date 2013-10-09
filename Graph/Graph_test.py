@@ -79,6 +79,40 @@ class GraphTest(unittest.TestCase):
     g.remove_edge(e1)
     self.assertEqual(g, {v:{}, w:{x:e2}, x:{w:e2}})
 
+  def test_remove_vertex(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Test removal of only vertex
+    g.add_vertex(v)
+    g.remove_vertex(v)
+    self.assertEqual(g, {})
+
+    # Test removal of vertex with no edges incident on it
+    g.clear()
+    g.add_vertex(v)
+    g.add_edge(e2)
+    g.remove_vertex(v)
+    self.assertEqual(g, {w:{x:e2}, x:{w:e2}})
+
+    # Test removal of vertex with edges incident on it.
+    g.clear()
+    g.add_edge(e1)
+    g.add_edge(e2)
+    g.add_edge(e3)
+    g.remove_vertex(v)
+    self.assertEqual(g, {w:{x:e2}, x:{w:e2}})
+
+
+
+
+
+
 if __name__ == "__main__":
   unittest.main()
 

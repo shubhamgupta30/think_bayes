@@ -128,6 +128,7 @@ class Graph(dict):
     self[v][w] = e
     self[w][v] = e
 
+
   def remove_edge(self, e):
     """ Removes an edge from the graph if the edge is present.
     Otherwise, it does nothing. Note that it does not throw an error
@@ -161,9 +162,9 @@ class Graph(dict):
     # Is the vertex present in the graph?
     if self.has_key(v):
       # Remove all the neighbouring edges
-      edges = self[v].viewvalues()
+      edges = self[v].values()
       for e in edges:
-        remove_edge(e)
+        self.remove_edge(e)
 
       # The adjacency list should be empty now.
       assert self[v] == {}
