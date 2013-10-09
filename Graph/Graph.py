@@ -117,12 +117,14 @@ class Graph(dict):
     (v,w) = e
     if not self.has_key(v):
       logging.warning('Attempt to insert edge ' + str(e) + ' while vertex ' +
-                      str(v) + ' is not in graph yet.')
-      return
+                      str(v) + ' is not in graph yet. This resulted in '+
+                      'addition of ' + str(v) + ' to the graph.')
+      self.add_vertex(v)
     if not self.has_key(w):
       logging.warning('Attempt to insert edge ' + str(e) + ' while vertex ' +
-                      str(w) + ' is not in graph yet.')
-      return
+                      str(w) + ' is not in graph yet. This resulted in '+
+                      'addition of ' + str(w) + ' to the graph.')
+      self.add_vertex(w)
     self[v][w] = e
     self[w][v] = e
 
@@ -159,6 +161,8 @@ class Graph(dict):
       # The adjacency list should be empty now.
       assert self[v] == {}
       del self[v]
+    else:
+      logging.warning("Attempt to remove a non-existent vertex " + str(v))
 
   def is_graph_sane(self):
     """ Performs basic sanity checks on the graph

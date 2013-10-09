@@ -31,14 +31,17 @@ class GraphTest(unittest.TestCase):
 
     # Without adding both vertices
     g.add_edge(e)
-    self.assertEqual(g, {})
+    self.assertEqual(g, {v:{w:e}, w:{v:e}})
+    g.clear();
 
     # Without adding one vertex
     g.add_vertex(v)
     g.add_edge(e)
-    self.assertEqual(g, {v:{}})
+    self.assertEqual(g, {v:{w:e}, w:{v:e}})
+    g.clear();
 
     # After Adding both vertices
+    g.add_vertex(v)
     g.add_vertex(w)
     g.add_edge(e)
     self.assertEqual(g, {v:{w:e}, w:{v:e}})
