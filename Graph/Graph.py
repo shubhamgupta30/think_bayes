@@ -15,6 +15,7 @@ http://greenteapress.com/complexity/thinkcomplexity.pdf
 """
 
 from sets import Set
+from collections import deque
 import hashlib
 import logging
 
@@ -279,6 +280,36 @@ class Graph(dict):
           return false
 
     return true
+
+  def bfs(self, start):
+    """ Takes a start node and performs a bfs.
+    Args:
+      start: the start node
+    Returns:
+      A set of discovered nodes in the graph
+    """
+    queue = deque([start])
+    visited = Set()
+    while queue:
+      v = queue.popleft()
+      for w in self.out_vertices(v):
+        if w not in visited:
+          queue.append(w)
+      visited.add(v)
+    return visited
+
+  def is_connected(self):
+    """ Determines if the graph is connected
+    Returns:
+      true if the graph is connected, false otherwise
+    """
+    if len(self) == 0:
+      # An empty graph is vacuosly connected
+      return True
+    visited = self.bfs(next(self.iterkeys()))
+    if len(visited) == len(self):
+      return True
+    return False
 
   def __eq__(self, other):
     return self.__str__() == other.__str__()

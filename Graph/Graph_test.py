@@ -263,6 +263,52 @@ class GraphTest(unittest.TestCase):
     g.add_all_edges()
     self.assertEqual(g, {v:{w:e1, x:e3}, w:{v:e1, x:e2}, x:{w:e2, v:e3}})
 
+  def test_bfs(self):
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    y = Vertex('y')
+    z = Vertex('z')
+    a = Vertex('a')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+    e4 = Edge(y,z)
+    g = Graph([v,w,x,y,z,a], [e1,e2,e3,e4])
+
+    # Start bfs from an isolated vertex
+    self.verify_list_equal_unordered(list(g.bfs(a)), [a])
+
+    # Start from one connected component
+    self.verify_list_equal_unordered(list(g.bfs(y)), [y, z])
+
+    # Start from second connected component
+    self.verify_list_equal_unordered(list(g.bfs(v)), [v,w,x])
+    self.verify_list_equal_unordered(list(g.bfs(v)), list(g.bfs(w)))
+
+  def test_is_connected(self):
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Check on an empty graph
+    g = Graph()
+    self.assertTrue(g.is_connected())
+
+    # Check on an edgeless graph
+    g = Graph([v,w,x], [])
+    self.assertFalse(g.is_connected())
+
+    # Check on a disconnected graph
+    g = Graph([v,w,x], [e1])
+    self.assertFalse(g.is_connected())
+
+    # Check on a connected graph
+    g = Graph([v,w,x], [e1, e2])
+    self.assertTrue(g.is_connected())
 
 
 
