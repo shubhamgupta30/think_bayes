@@ -5,6 +5,7 @@ import unittest
 from Graph import Graph
 from Graph import Edge
 from Graph import Vertex
+from Graph import RandomGraph
 from sets import Set
 
 class GraphTest(unittest.TestCase):
@@ -309,6 +310,15 @@ class GraphTest(unittest.TestCase):
     # Check on a connected graph
     g = Graph([v,w,x], [e1, e2])
     self.assertTrue(g.is_connected())
+
+  def test_random_graph(self):
+    print RandomGraph(4,0.0)
+    print RandomGraph(4,0.1)
+    print RandomGraph(4,0.2)
+    print RandomGraph(4,0.5)
+    print RandomGraph(4,0.9)
+    print RandomGraph(4,1.0)
+
 
 
 

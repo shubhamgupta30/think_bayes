@@ -16,6 +16,7 @@ http://greenteapress.com/complexity/thinkcomplexity.pdf
 
 from sets import Set
 from collections import deque
+from numpy.random import binomial
 import hashlib
 import logging
 
@@ -317,4 +318,27 @@ class Graph(dict):
   def __hash__(self):
     return hash_string(self.__str__())
 
+def getRandomCoinFlip(p):
+  max_flips = 10000
+  coin_flips = binomial(1, p, max_flips)
+  position = 0
+  while True:
+    if position == max_flips:
+      coin_flips = binomial(1, p, max_flips)
+      position = 0
+    else:
+      yield coin_flips[position]
+      position += 1
+
+class RandomGraph(Graph):
+  def __init__(self, n, p):
+    """ Creates a random graph with the parameters n,p
+    Args:
+      n : number of vertices
+      p: Probability that an edge is present in the graph
+    """
+    coin = getRandomCoinFlip(p)
+    vertices = [Vertex('v' + str(i)) for i in xrange(n)]
+    edges = [Edge(v,w) for v in vertices for w in vertices if v != w and next(coin) == 1]
+    Graph.__init__(self, vertices, edges)
 
