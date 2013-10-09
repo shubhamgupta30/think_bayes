@@ -14,6 +14,14 @@ class GraphTest(unittest.TestCase):
     """
     return g1.__dict__ == g2.__dict__
 
+  def verify_list_equal_unordered(self, l1, l2):
+    """ Tests if two lists are equal unordered
+
+    Args:
+      l1, l2: lists to be compared
+    """
+    self.assertEqual(sorted(l1), sorted(l2))
+
   def test_add_vertex(self):
     g = Graph()
     # Tests that a label is used only once.
@@ -136,6 +144,48 @@ class GraphTest(unittest.TestCase):
     g.add_edge(e1)
     g.add_edge(e2)
     self.assertEqual(g.get_edge(v,w), e1)
+
+  def test_vertices(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+
+    # Vertices when graph is empty
+    self.verify_list_equal_unordered(g.vertices(), [])
+
+    # Graph has one vertex
+    g.add_vertex(v)
+    self.verify_list_equal_unordered(g.vertices(), [v])
+
+    # Graph has multiple vertex
+    g.add_vertex(w)
+    g.add_vertex(x)
+    self.verify_list_equal_unordered(g.vertices(), [v, w, x])
+
+  def test_edges(self):
+    g = Graph()
+    v = Vertex('v')
+    w = Vertex('w')
+    x = Vertex('x')
+    e1 = Edge(v,w)
+    e2 = Edge(w,x)
+    e3 = Edge(v,x)
+
+    # Edges when graph is empty
+    self.verify_list_equal_unordered(g.edges(), [])
+
+    # Edges when only vertices present
+    g.add_vertex(v)
+    g.add_vertex(w)
+    self.verify_list_equal_unordered(g.edges(), [])
+
+    # Edges when edges present
+    g.add_edge(e1)
+    g.add_edge(e2)
+    g.add_edge(e3)
+    self.verify_list_equal_unordered(g.edges(), [e1, e2, e3])
+
 
 
 

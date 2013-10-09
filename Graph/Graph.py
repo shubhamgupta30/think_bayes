@@ -197,6 +197,26 @@ class Graph(dict):
       return self[v2][v1]
     return None
 
+  def vertices(self):
+    """ Returns a list of vertices of the graph
+
+    Returns:
+      A list of vertices of the graph
+    """
+    return self.keys()
+
+  def edges(self):
+    """ Returns a list of edges of the graph
+
+    Returns:
+      A list of edges of the graph
+    """
+    edges = Set()
+    for v in self.viewkeys():
+      for e in self[v].viewvalues():
+        edges.add(e)
+    return list(edges)
+
 
   def is_graph_sane(self):
     """ Performs basic sanity checks on the graph
